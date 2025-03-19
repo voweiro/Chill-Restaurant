@@ -1,18 +1,18 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
-import { ChevronLeft, ChevronRight, Users } from "lucide-react"
-import { Badge } from "@/components/ui/badge"
+import { useState } from "react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { ChevronLeft, ChevronRight, Users } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 
 export function ReservationCalendar() {
-  const [date, setDate] = useState<Date | undefined>(new Date())
-  const [view, setView] = useState<"calendar" | "day">("calendar")
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [view, setView] = useState<"calendar" | "day">("calendar");
 
   // Sample reservation data
-  const reservationCounts = {
+  const reservationCounts: Record<string, number> = {
     "2025-01-15": 3,
     "2025-01-16": 5,
     "2025-01-17": 8,
@@ -20,7 +20,7 @@ export function ReservationCalendar() {
     "2025-01-19": 7,
     "2025-01-20": 2,
     "2025-01-21": 4,
-  }
+  };
 
   // Sample time slots with reservation counts
   const timeSlots = [
@@ -37,21 +37,18 @@ export function ReservationCalendar() {
     { time: "20:00", total: 10, reserved: 6 },
     { time: "20:30", total: 10, reserved: 2 },
     { time: "21:00", total: 10, reserved: 1 },
-  ]
+  ];
 
   // Format date as YYYY-MM-DD for lookup
-  const formatDateKey = (date: Date) => {
-    return date.toISOString().split("T")[0]
-  }
+  const formatDateKey = (date: Date) => date.toISOString().split("T")[0];
 
-  const formatDisplayDate = (date: Date) => {
-    return new Intl.DateTimeFormat("en-US", {
+  const formatDisplayDate = (date: Date) =>
+    new Intl.DateTimeFormat("en-US", {
       weekday: "long",
       year: "numeric",
       month: "long",
       day: "numeric",
-    }).format(date)
-  }
+    }).format(date);
 
   return (
     <Card className="p-4 dark:bg-gray-900 dark:border-gray-800">
@@ -60,7 +57,12 @@ export function ReservationCalendar() {
           <div className="flex justify-between items-center mb-4">
             <h2 className="font-semibold dark:text-white">Reservation Calendar</h2>
             <div className="flex items-center gap-2">
-              <Button variant="outline" size="sm" className="dark:border-gray-700 dark:text-gray-300">
+              <Button
+                variant="outline"
+                size="sm"
+                className="dark:border-gray-700 dark:text-gray-300"
+                onClick={() => setDate(new Date())}
+              >
                 Today
               </Button>
               <Button
@@ -74,39 +76,12 @@ export function ReservationCalendar() {
             </div>
           </div>
 
+          {/* Calendar Component */}
           <Calendar
             mode="single"
             selected={date}
             onSelect={setDate}
             className="rounded-md border dark:border-gray-700 dark:text-white"
-            components={{
-              DayContent: (props) => {
-                const dateKey = formatDateKey(props.date)
-                const hasReservations = reservationCounts[dateKey]
-
-                return (
-                  <div className="relative h-full w-full p-2 flex items-center justify-center">
-                    {props.day}
-                    {hasReservations && (
-                      <div className="absolute bottom-1">
-                        <Badge
-                          variant="outline"
-                          className={`text-[10px] px-1 py-0 h-4 ${
-                            reservationCounts[dateKey] > 10
-                              ? "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400"
-                              : reservationCounts[dateKey] > 5
-                                ? "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-400"
-                                : "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400"
-                          }`}
-                        >
-                          {reservationCounts[dateKey]}
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-                )
-              },
-            }}
           />
         </>
       ) : (
@@ -148,18 +123,18 @@ export function ReservationCalendar() {
         </>
       )}
     </Card>
-  )
+  );
 }
 
 interface TimeSlotProps {
-  time: string
-  total: number
-  reserved: number
+  time: string;
+  total: number;
+  reserved: number;
 }
 
 function TimeSlot({ time, total, reserved }: TimeSlotProps) {
-  const available = total - reserved
-  const isFull = available === 0
+  const available = total - reserved;
+  const isFull = available === 0;
 
   return (
     <div
@@ -185,6 +160,5 @@ function TimeSlot({ time, total, reserved }: TimeSlotProps) {
         </span>
       </div>
     </div>
-  )
+  );
 }
-
